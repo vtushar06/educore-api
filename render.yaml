@@ -63,12 +63,12 @@ services:
       - key: DJANGO_SETTINGS_MODULE
         value: educore.settings.prod
 
-databases:
-  - name: educore-postgres
+  - type: redis
+    name: educore-redis
     region: ohio
     plan: starter
 
-  - type: redis
-    name: educore-redis
+databases:
+  - name: educore-postgres
     region: ohio
     plan: starter
