@@ -1,0 +1,75 @@
+# ---------------------------------------------------------------------------
+# EduCore API — Docker Compose
+# ---------------------------------------------------------------------------
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: educore
+      POSTGRES_USER: educore
+      POSTGRES_PASSWORD: educore
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    environment:
+      DJANGO_SETTINGS_MODULE: educore.settings.prod
+      DJANGO_SECRET_KEY: change-this-to-a-real-secret-key
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      POSTGRES_DB: educore
+      POSTGRES_USER: educore
+      POSTGRES_PASSWORD: educore
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+      SECURE_SSL_REDIRECT: "False"
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_files:/app/staticfiles
+      - media_files:/app/media
+
+  celery:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    environment:
+      DJANGO_SETTINGS_MODULE: educore.settings.prod
+      DJANGO_SECRET_KEY: change-this-to-a-real-secret-key
+      POSTGRES_DB: educore
+      POSTGRES_USER: educore
+      POSTGRES_PASSWORD: educore
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    command: celery -A educore worker --loglevel=info
+
+volumes:
+  postgres_data:
+  static_files:
+  media_files:
