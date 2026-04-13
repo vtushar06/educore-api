@@ -5,6 +5,6 @@ exclude =
     __pycache__,
     .venv,
     venv
-extend-ignore = E203, W503
+extend-ignore = E203, W503, W391
 per-file-ignores =
     */settings/*.py:F401,F403,E501

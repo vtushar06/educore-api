@@ -18,12 +18,6 @@ from .serializers import (
     ModuleSerializer,
 )
 
-
-# ---------------------------------------------------------------------------
-# Course views
-# ---------------------------------------------------------------------------
-
-
 class CourseListCreateView(generics.ListCreateAPIView):
     """
     GET  /api/v1/courses/           — list published courses (public)
@@ -55,7 +49,6 @@ class CourseListCreateView(generics.ListCreateAPIView):
             return qs
         return qs.filter(is_published=True)
 
-
 class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     GET    /api/v1/courses/{slug}/   — course detail (public for published)
@@ -79,12 +72,6 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ("PUT", "PATCH"):
             return CourseCreateSerializer
         return CourseDetailSerializer
-
-
-# ---------------------------------------------------------------------------
-# Module views
-# ---------------------------------------------------------------------------
-
 
 class ModuleListCreateView(generics.ListCreateAPIView):
     """
@@ -112,12 +99,6 @@ class ModuleListCreateView(generics.ListCreateAPIView):
         course = self.get_course()
         serializer.save(course=course)
 
-
-# ---------------------------------------------------------------------------
-# Lesson views
-# ---------------------------------------------------------------------------
-
-
 class LessonListCreateView(generics.ListCreateAPIView):
     """
     GET  /api/v1/modules/{module_id}/lessons/
@@ -141,7 +122,6 @@ class LessonListCreateView(generics.ListCreateAPIView):
         module = self.get_module()
         serializer.save(module=module)
 
-
 class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     GET/PUT/DELETE /api/v1/lessons/{id}/
@@ -154,7 +134,6 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in permissions.SAFE_METHODS:
             return [permissions.IsAuthenticated()]
         return [IsInstructorOrAdmin()]
-
 
 class LessonCompleteView(APIView):
     """
@@ -196,12 +175,6 @@ class LessonCompleteView(APIView):
             status=status.HTTP_201_CREATED,
         )
 
-
-# ---------------------------------------------------------------------------
-# Enrollment views
-# ---------------------------------------------------------------------------
-
-
 class EnrollView(APIView):
     """
     POST /api/v1/courses/{slug}/enroll/
@@ -232,7 +205,6 @@ class EnrollView(APIView):
             status=status.HTTP_201_CREATED,
         )
 
-
 class EnrollmentListView(generics.ListAPIView):
     """
     GET /api/v1/enrollments/
@@ -252,7 +224,6 @@ class EnrollmentListView(generics.ListAPIView):
             return qs.filter(course__instructor=user)
         return qs  # admin sees all
 
-
 class EnrollmentUpdateView(generics.UpdateAPIView):
     """
     PATCH /api/v1/enrollments/{id}/
@@ -270,7 +241,6 @@ class EnrollmentUpdateView(generics.UpdateAPIView):
         if user.role == "instructor":
             return qs.filter(course__instructor=user)
         return qs
-
 
 class MyEnrollmentsView(generics.ListAPIView):
     """

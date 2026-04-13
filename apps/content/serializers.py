@@ -5,7 +5,6 @@ from apps.courses.models import Enrollment
 
 from .models import Certificate, Note, Review
 
-
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
@@ -15,7 +14,6 @@ class NoteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data["author"] = self.context["request"].user
         return super().create(validated_data)
-
 
 class NoteCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,7 +26,6 @@ class NoteCreateSerializer(serializers.ModelSerializer):
         validated_data["lesson_id"] = self.context["view"].kwargs["lesson_id"]
         return super().create(validated_data)
 
-
 class ReviewSerializer(serializers.ModelSerializer):
     student = UserListSerializer(read_only=True)
 
@@ -36,7 +33,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ("id", "student", "course", "rating", "comment", "created_at")
         read_only_fields = ("id", "student", "course", "created_at")
-
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -81,7 +77,6 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         validated_data["student"] = self.context["request"].user
         validated_data["course"] = course
         return super().create(validated_data)
-
 
 class CertificateSerializer(serializers.ModelSerializer):
     student = UserListSerializer(read_only=True)

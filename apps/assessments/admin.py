@@ -2,13 +2,11 @@ from django.contrib import admin
 
 from .models import Attempt, Question, Quiz
 
-
 class QuestionInline(admin.TabularInline):
     model = Question
     extra = 1
     ordering = ("order",)
     fields = ("text", "question_type", "choices", "correct_answer", "points", "order")
-
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
@@ -16,7 +14,6 @@ class QuizAdmin(admin.ModelAdmin):
     list_filter = ("passing_score", "max_attempts")
     search_fields = ("title", "lesson__title")
     inlines = [QuestionInline]
-
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
@@ -26,7 +23,6 @@ class QuestionAdmin(admin.ModelAdmin):
     @admin.display(description="Question")
     def text_preview(self, obj):
         return obj.text[:80] + "..." if len(obj.text) > 80 else obj.text
-
 
 @admin.register(Attempt)
 class AttemptAdmin(admin.ModelAdmin):

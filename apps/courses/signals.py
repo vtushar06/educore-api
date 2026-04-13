@@ -13,7 +13,6 @@ from .models import Enrollment
 
 logger = logging.getLogger(__name__)
 
-
 @receiver(post_save, sender=Enrollment)
 def enrollment_status_changed(sender, instance, created, **kwargs):
     """

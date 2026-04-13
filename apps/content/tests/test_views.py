@@ -9,11 +9,9 @@ from apps.courses.models import Course, Enrollment, Lesson, Module
 
 User = get_user_model()
 
-
 @pytest.fixture
 def api_client():
     return APIClient()
-
 
 @pytest.fixture
 def instructor():
@@ -25,7 +23,6 @@ def instructor():
         role="instructor",
     )
 
-
 @pytest.fixture
 def student():
     return User.objects.create_user(
@@ -34,7 +31,6 @@ def student():
         first_name="Test",
         last_name="Student",
     )
-
 
 @pytest.fixture
 def course_setup(instructor, student):
@@ -53,7 +49,6 @@ def course_setup(instructor, student):
         student=student, course=course, status="approved"
     )
     return {"course": course, "lesson": lesson, "enrollment": enrollment}
-
 
 @pytest.mark.django_db
 class TestNotes:
@@ -86,7 +81,6 @@ class TestNotes:
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data["results"]) == 0
 
-
 @pytest.mark.django_db
 class TestReviews:
     def test_create_review_with_enrollment(self, api_client, student, course_setup):
@@ -117,7 +111,6 @@ class TestReviews:
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data["results"]) == 1
-
 
 @pytest.mark.django_db
 class TestCertificates:

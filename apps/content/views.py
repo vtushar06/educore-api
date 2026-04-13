@@ -1,8 +1,6 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions
 
 from apps.accounts.permissions import IsOwnerOrReadOnly
-from apps.courses.models import Course
 
 from .models import Certificate, Note, Review
 from .serializers import (
@@ -12,12 +10,6 @@ from .serializers import (
     ReviewCreateSerializer,
     ReviewSerializer,
 )
-
-
-# ---------------------------------------------------------------------------
-# Notes (private, per-lesson)
-# ---------------------------------------------------------------------------
-
 
 class NoteListCreateView(generics.ListCreateAPIView):
     """
@@ -38,7 +30,6 @@ class NoteListCreateView(generics.ListCreateAPIView):
             lesson_id=self.kwargs["lesson_id"],
         )
 
-
 class NoteDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     GET/PUT/DELETE /api/v1/notes/{id}/  — manage own note
@@ -49,12 +40,6 @@ class NoteDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Note.objects.filter(author=self.request.user)
-
-
-# ---------------------------------------------------------------------------
-# Reviews (one per enrollment)
-# ---------------------------------------------------------------------------
-
 
 class ReviewListCreateView(generics.ListCreateAPIView):
     """
@@ -77,7 +62,6 @@ class ReviewListCreateView(generics.ListCreateAPIView):
             course__slug=self.kwargs["slug"]
         ).select_related("student")
 
-
 class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     GET/PUT/DELETE /api/v1/reviews/{id}/
@@ -86,12 +70,6 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
     queryset = Review.objects.all()
-
-
-# ---------------------------------------------------------------------------
-# Certificates
-# ---------------------------------------------------------------------------
-
 
 class MyCertificatesView(generics.ListAPIView):
     """
@@ -107,7 +85,6 @@ class MyCertificatesView(generics.ListAPIView):
         return Certificate.objects.filter(
             student=self.request.user
         ).select_related("course")
-
 
 class CertificateVerifyView(generics.RetrieveAPIView):
     """

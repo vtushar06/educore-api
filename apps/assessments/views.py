@@ -14,7 +14,6 @@ from .serializers import (
     QuizSerializer,
 )
 
-
 class QuizDetailView(generics.RetrieveAPIView):
     """
     GET /api/v1/lessons/{lesson_id}/quiz/
@@ -28,7 +27,6 @@ class QuizDetailView(generics.RetrieveAPIView):
     def get_object(self):
         lesson = get_object_or_404(Lesson, pk=self.kwargs["lesson_id"])
         return get_object_or_404(Quiz, lesson=lesson)
-
 
 class QuizCreateView(generics.CreateAPIView):
     """
@@ -47,7 +45,6 @@ class QuizCreateView(generics.CreateAPIView):
 
             raise ValidationError({"detail": "This lesson already has a quiz."})
         serializer.save(lesson=lesson)
-
 
 class AttemptCreateView(APIView):
     """
@@ -98,7 +95,6 @@ class AttemptCreateView(APIView):
             AttemptSerializer(attempt).data,
             status=status.HTTP_201_CREATED,
         )
-
 
 class AttemptListView(generics.ListAPIView):
     """

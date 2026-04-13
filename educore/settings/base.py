@@ -18,10 +18,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
 
-# ---------------------------------------------------------------------------
-# Application definition
-# ---------------------------------------------------------------------------
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -72,10 +68,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "educore.wsgi.application"
 
-# ---------------------------------------------------------------------------
-# Database — overridden per environment
-# ---------------------------------------------------------------------------
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -87,10 +79,6 @@ DATABASES = {
     }
 }
 
-# ---------------------------------------------------------------------------
-# Auth
-# ---------------------------------------------------------------------------
-
 AUTH_USER_MODEL = "accounts.User"
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -100,18 +88,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# ---------------------------------------------------------------------------
-# Internationalization
-# ---------------------------------------------------------------------------
-
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
-
-# ---------------------------------------------------------------------------
-# Static & Media
-# ---------------------------------------------------------------------------
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -120,10 +100,6 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# ---------------------------------------------------------------------------
-# Django REST Framework
-# ---------------------------------------------------------------------------
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -149,10 +125,6 @@ REST_FRAMEWORK = {
     },
 }
 
-# ---------------------------------------------------------------------------
-# SimpleJWT
-# ---------------------------------------------------------------------------
-
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
@@ -161,20 +133,12 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-# ---------------------------------------------------------------------------
-# Celery (optional async tasks)
-# ---------------------------------------------------------------------------
-
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
-
-# ---------------------------------------------------------------------------
-# CORS
-# ---------------------------------------------------------------------------
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = os.environ.get(

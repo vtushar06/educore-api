@@ -1,6 +1,3 @@
-# ---------------------------------------------------------------------------
-# EduCore API — Multi-stage Docker build
-# ---------------------------------------------------------------------------
 FROM python:3.12-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -20,7 +17,6 @@ COPY requirements/prod.txt requirements/prod.txt
 COPY requirements/base.txt requirements/base.txt
 RUN pip install --no-cache-dir -r requirements/prod.txt
 
-# ---------------------------------------------------------------------------
 FROM base AS app
 
 COPY . .

@@ -8,7 +8,6 @@ from django.core.mail import send_mail
 
 logger = logging.getLogger(__name__)
 
-
 @shared_task(bind=True, max_retries=3)
 def send_enrollment_notification(self, enrollment_id):
     """Send an email notification when enrollment is approved."""

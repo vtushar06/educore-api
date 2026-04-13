@@ -1,6 +1,5 @@
 from django.contrib.auth.models import BaseUserManager
 
-
 class UserManager(BaseUserManager):
     """
     Custom manager that uses email as the unique identifier

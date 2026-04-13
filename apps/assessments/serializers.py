@@ -5,7 +5,6 @@ from rest_framework import serializers
 
 from .models import Attempt, Question, Quiz
 
-
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
@@ -24,7 +23,6 @@ class QuestionSerializer(serializers.ModelSerializer):
                 ]
             data.pop("correct_answer", None)
         return data
-
 
 class QuestionCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,7 +50,6 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
                 )
         return attrs
 
-
 class QuizSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
 
@@ -68,7 +65,6 @@ class QuizSerializer(serializers.ModelSerializer):
             "questions",
         )
         read_only_fields = ("id",)
-
 
 class QuizCreateSerializer(serializers.ModelSerializer):
     questions = QuestionCreateSerializer(many=True, required=False)
@@ -91,7 +87,6 @@ class QuizCreateSerializer(serializers.ModelSerializer):
         for q_data in questions_data:
             Question.objects.create(quiz=quiz, **q_data)
         return quiz
-
 
 class AttemptSubmitSerializer(serializers.Serializer):
     """
@@ -160,7 +155,6 @@ class AttemptSubmitSerializer(serializers.Serializer):
             attempt.save(update_fields=["time_taken_seconds"])
 
         return attempt
-
 
 class AttemptSerializer(serializers.ModelSerializer):
     class Meta:

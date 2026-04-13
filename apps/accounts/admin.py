@@ -4,7 +4,6 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 User = get_user_model()
 
-
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     """Custom admin for the email-based User model."""

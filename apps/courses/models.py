@@ -2,7 +2,6 @@ from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 
-
 class Course(models.Model):
     """
     A course created by an instructor containing ordered modules.
@@ -65,7 +64,6 @@ class Course(models.Model):
         )["avg"]
         return round(avg, 2) if avg else None
 
-
 class Module(models.Model):
     """An ordered section within a course."""
 
@@ -82,7 +80,6 @@ class Module(models.Model):
 
     def __str__(self):
         return f"{self.course.title} — {self.title}"
-
 
 class Lesson(models.Model):
     """Individual lesson/lecture within a module."""
@@ -103,7 +100,6 @@ class Lesson(models.Model):
 
     def __str__(self):
         return self.title
-
 
 class Enrollment(models.Model):
     """
@@ -149,7 +145,6 @@ class Enrollment(models.Model):
             return 0
         completed = self.progress.count()
         return round((completed / total) * 100, 1)
-
 
 class LessonProgress(models.Model):
     """Records a student completing a specific lesson."""

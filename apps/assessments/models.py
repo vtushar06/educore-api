@@ -2,7 +2,6 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 
-
 class Quiz(models.Model):
     """
     Assessment attached to a specific lesson.
@@ -34,7 +33,6 @@ class Quiz(models.Model):
 
     def __str__(self):
         return f"Quiz: {self.title}"
-
 
 class Question(models.Model):
     """
@@ -75,7 +73,6 @@ class Question(models.Model):
 
     def __str__(self):
         return f"Q{self.order}: {self.text[:60]}"
-
 
 class Attempt(models.Model):
     """

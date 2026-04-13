@@ -4,7 +4,6 @@ from rest_framework import serializers
 
 User = get_user_model()
 
-
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
@@ -48,7 +47,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
-
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -63,7 +61,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "date_joined",
         )
         read_only_fields = ("id", "email", "role", "date_joined")
-
 
 class UserListSerializer(serializers.ModelSerializer):
     """Lightweight serializer used in nested representations."""

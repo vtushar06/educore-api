@@ -8,11 +8,9 @@ from apps.courses.models import Course, Enrollment, Lesson, Module
 
 User = get_user_model()
 
-
 @pytest.fixture
 def api_client():
     return APIClient()
-
 
 @pytest.fixture
 def instructor():
@@ -24,7 +22,6 @@ def instructor():
         role="instructor",
     )
 
-
 @pytest.fixture
 def student():
     return User.objects.create_user(
@@ -33,7 +30,6 @@ def student():
         first_name="Test",
         last_name="Student",
     )
-
 
 @pytest.fixture
 def course(instructor):
@@ -45,18 +41,15 @@ def course(instructor):
         is_published=True,
     )
 
-
 @pytest.fixture
 def module(course):
     return Module.objects.create(course=course, title="Intro", order=1)
-
 
 @pytest.fixture
 def lesson(module):
     return Lesson.objects.create(
         module=module, title="First Lesson", content="Hello", order=1
     )
-
 
 @pytest.mark.django_db
 class TestCourseEndpoints:
@@ -85,7 +78,6 @@ class TestCourseEndpoints:
             format="json",
         )
         assert response.status_code == status.HTTP_201_CREATED
-
 
 @pytest.mark.django_db
 class TestEnrollmentEndpoints:

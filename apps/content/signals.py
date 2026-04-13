@@ -12,7 +12,6 @@ from django.dispatch import receiver
 
 logger = logging.getLogger(__name__)
 
-
 @receiver(post_save, sender="courses.LessonProgress")
 def check_course_completion(sender, instance, created, **kwargs):
     """Issue a certificate when a student reaches 100% completion."""
