@@ -222,7 +222,8 @@ class EnrollmentListView(generics.ListAPIView):
         qs = Enrollment.objects.select_related("student", "course")
         if user.role == "instructor":
             return qs.filter(course__instructor=user)
-        return qs  # admin sees all
+        return qs
+
 
 class EnrollmentUpdateView(generics.UpdateAPIView):
     """
@@ -241,6 +242,7 @@ class EnrollmentUpdateView(generics.UpdateAPIView):
         if user.role == "instructor":
             return qs.filter(course__instructor=user)
         return qs
+
 
 class MyEnrollmentsView(generics.ListAPIView):
     """
