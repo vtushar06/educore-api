@@ -122,6 +122,7 @@ class LessonListCreateView(generics.ListCreateAPIView):
         module = self.get_module()
         serializer.save(module=module)
 
+
 class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     GET/PUT/DELETE /api/v1/lessons/{id}/
@@ -134,6 +135,7 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in permissions.SAFE_METHODS:
             return [permissions.IsAuthenticated()]
         return [IsInstructorOrAdmin()]
+
 
 class LessonCompleteView(APIView):
     """
@@ -175,6 +177,7 @@ class LessonCompleteView(APIView):
             status=status.HTTP_201_CREATED,
         )
 
+
 class EnrollView(APIView):
     """
     POST /api/v1/courses/{slug}/enroll/
@@ -204,6 +207,7 @@ class EnrollView(APIView):
             EnrollmentSerializer(enrollment).data,
             status=status.HTTP_201_CREATED,
         )
+
 
 class EnrollmentListView(generics.ListAPIView):
     """
