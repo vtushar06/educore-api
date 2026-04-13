@@ -1,5 +1,5 @@
 # render.yaml
-# Render Blueprint Configuration for EduCore API
+# Render Blueprint Configuration for EduCore API (Free Tier)
 
 services:
   # The Django Web API Service
@@ -7,7 +7,7 @@ services:
     name: educore-api
     env: docker
     region: ohio
-    plan: starter
+    plan: free
     dockerfilePath: docker/Dockerfile
     envVars:
       - key: DATABASE_URL
@@ -37,39 +37,15 @@ services:
         # Allow the auto-generated render domain
         value: "educore-api.onrender.com"
 
-  # The Background Async Celery Worker
-  - type: worker
-    name: educore-celery-worker
-    env: docker
-    region: ohio
-    plan: starter
-    dockerfilePath: docker/Dockerfile
-    dockerCommand: "celery -A educore worker --loglevel=info"
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: educore-postgres
-          property: connectionString
-      - key: CELERY_BROKER_URL
-        fromService:
-          type: redis
-          name: educore-redis
-          property: connectionString
-      - key: CELERY_RESULT_BACKEND
-        fromService:
-          type: redis
-          name: educore-redis
-          property: connectionString
-      - key: DJANGO_SETTINGS_MODULE
-        value: educore.settings.prod
-
+  # Redis (for caching/background task queuing later)
   - type: redis
     name: educore-redis
     region: ohio
-    plan: starter
+    plan: free
     ipAllowList: [] # Blocks all external access; allows internal Render access
 
 databases:
+  # PostgreSQL Database
   - name: educore-postgres
     region: ohio
-    plan: starter
+    plan: free
