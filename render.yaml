@@ -67,6 +67,7 @@ services:
     name: educore-redis
     region: ohio
     plan: starter
+    ipAllowList: [] # Blocks all external access; allows internal Render access
 
 databases:
   - name: educore-postgres
