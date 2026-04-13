@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 
+
 class Course(models.Model):
     """
     A course created by an instructor containing ordered modules.
@@ -59,17 +60,14 @@ class Course(models.Model):
     def average_rating(self):
         from apps.content.models import Review
 
-        avg = Review.objects.filter(course=self).aggregate(
-            avg=models.Avg("rating")
-        )["avg"]
+        avg = Review.objects.filter(course=self).aggregate(avg=models.Avg("rating"))["avg"]
         return round(avg, 2) if avg else None
+
 
 class Module(models.Model):
     """An ordered section within a course."""
 
-    course = models.ForeignKey(
-        Course, on_delete=models.CASCADE, related_name="modules"
-    )
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="modules")
     title = models.CharField(max_length=200)
     order = models.PositiveIntegerField(default=0)
 
@@ -81,12 +79,11 @@ class Module(models.Model):
     def __str__(self):
         return f"{self.course.title} — {self.title}"
 
+
 class Lesson(models.Model):
     """Individual lesson/lecture within a module."""
 
-    module = models.ForeignKey(
-        Module, on_delete=models.CASCADE, related_name="lessons"
-    )
+    module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name="lessons")
     title = models.CharField(max_length=200)
     content = models.TextField(help_text="Lesson body in Markdown format.")
     video_url = models.URLField(blank=True)
@@ -100,6 +97,7 @@ class Lesson(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Enrollment(models.Model):
     """
@@ -119,9 +117,7 @@ class Enrollment(models.Model):
         on_delete=models.CASCADE,
         related_name="enrollments",
     )
-    course = models.ForeignKey(
-        Course, on_delete=models.CASCADE, related_name="enrollments"
-    )
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="enrollments")
     status = models.CharField(
         max_length=20,
         choices=Status.choices,
@@ -146,15 +142,12 @@ class Enrollment(models.Model):
         completed = self.progress.count()
         return round((completed / total) * 100, 1)
 
+
 class LessonProgress(models.Model):
     """Records a student completing a specific lesson."""
 
-    enrollment = models.ForeignKey(
-        Enrollment, on_delete=models.CASCADE, related_name="progress"
-    )
-    lesson = models.ForeignKey(
-        Lesson, on_delete=models.CASCADE, related_name="completions"
-    )
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name="progress")
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="completions")
     completed_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -8,9 +8,11 @@ from apps.courses.models import Course, Enrollment, Lesson, Module
 
 User = get_user_model()
 
+
 @pytest.fixture
 def api_client():
     return APIClient()
+
 
 @pytest.fixture
 def instructor():
@@ -22,6 +24,7 @@ def instructor():
         role="instructor",
     )
 
+
 @pytest.fixture
 def student():
     return User.objects.create_user(
@@ -30,6 +33,7 @@ def student():
         first_name="Test",
         last_name="Student",
     )
+
 
 @pytest.fixture
 def course(instructor):
@@ -41,15 +45,16 @@ def course(instructor):
         is_published=True,
     )
 
+
 @pytest.fixture
 def module(course):
     return Module.objects.create(course=course, title="Intro", order=1)
 
+
 @pytest.fixture
 def lesson(module):
-    return Lesson.objects.create(
-        module=module, title="First Lesson", content="Hello", order=1
-    )
+    return Lesson.objects.create(module=module, title="First Lesson", content="Hello", order=1)
+
 
 @pytest.mark.django_db
 class TestCourseEndpoints:
@@ -79,6 +84,7 @@ class TestCourseEndpoints:
         )
         assert response.status_code == status.HTTP_201_CREATED
 
+
 @pytest.mark.django_db
 class TestEnrollmentEndpoints:
     def test_enroll_as_student(self, api_client, student, course):
@@ -97,9 +103,7 @@ class TestEnrollmentEndpoints:
 
     def test_complete_lesson(self, api_client, student, course, lesson):
         api_client.force_authenticate(user=student)
-        Enrollment.objects.create(
-            student=student, course=course, status="approved"
-        )
+        Enrollment.objects.create(student=student, course=course, status="approved")
         url = reverse("courses:lesson-complete", kwargs={"pk": lesson.pk})
         response = api_client.post(url)
         assert response.status_code == status.HTTP_201_CREATED

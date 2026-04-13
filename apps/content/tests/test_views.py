@@ -9,9 +9,11 @@ from apps.courses.models import Course, Enrollment, Lesson, Module
 
 User = get_user_model()
 
+
 @pytest.fixture
 def api_client():
     return APIClient()
+
 
 @pytest.fixture
 def instructor():
@@ -23,6 +25,7 @@ def instructor():
         role="instructor",
     )
 
+
 @pytest.fixture
 def student():
     return User.objects.create_user(
@@ -31,6 +34,7 @@ def student():
         first_name="Test",
         last_name="Student",
     )
+
 
 @pytest.fixture
 def course_setup(instructor, student):
@@ -42,13 +46,10 @@ def course_setup(instructor, student):
         is_published=True,
     )
     module = Module.objects.create(course=course, title="Mod1", order=1)
-    lesson = Lesson.objects.create(
-        module=module, title="Lesson 1", content="Hello", order=1
-    )
-    enrollment = Enrollment.objects.create(
-        student=student, course=course, status="approved"
-    )
+    lesson = Lesson.objects.create(module=module, title="Lesson 1", content="Hello", order=1)
+    enrollment = Enrollment.objects.create(student=student, course=course, status="approved")
     return {"course": course, "lesson": lesson, "enrollment": enrollment}
+
 
 @pytest.mark.django_db
 class TestNotes:
@@ -56,30 +57,21 @@ class TestNotes:
         api_client.force_authenticate(user=student)
         lesson = course_setup["lesson"]
         url = reverse("content:note-list", kwargs={"lesson_id": lesson.pk})
-        response = api_client.post(
-            url, {"body": "My private note"}, format="json"
-        )
+        response = api_client.post(url, {"body": "My private note"}, format="json")
         assert response.status_code == status.HTTP_201_CREATED
         assert Note.objects.filter(author=student).count() == 1
 
     def test_notes_are_private(self, api_client, course_setup):
         lesson = course_setup["lesson"]
-        other_student = User.objects.create_user(
-            email="other@test.com", password="Pass123!"
-        )
-        Note.objects.create(
-            author=other_student, lesson=lesson, body="Other's note"
-        )
+        other_student = User.objects.create_user(email="other@test.com", password="Pass123!")
+        Note.objects.create(author=other_student, lesson=lesson, body="Other's note")
 
-        api_client.force_authenticate(
-            user=User.objects.create_user(
-                email="viewer@test.com", password="Pass123!"
-            )
-        )
+        api_client.force_authenticate(user=User.objects.create_user(email="viewer@test.com", password="Pass123!"))
         url = reverse("content:note-list", kwargs={"lesson_id": lesson.pk})
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data["results"]) == 0
+
 
 @pytest.mark.django_db
 class TestReviews:
@@ -87,21 +79,15 @@ class TestReviews:
         api_client.force_authenticate(user=student)
         course = course_setup["course"]
         url = reverse("content:review-list", kwargs={"slug": course.slug})
-        response = api_client.post(
-            url, {"rating": 5, "comment": "Great course!"}, format="json"
-        )
+        response = api_client.post(url, {"rating": 5, "comment": "Great course!"}, format="json")
         assert response.status_code == status.HTTP_201_CREATED
 
     def test_review_without_enrollment_blocked(self, api_client, course_setup):
-        unenrolled = User.objects.create_user(
-            email="unenrolled@test.com", password="Pass123!"
-        )
+        unenrolled = User.objects.create_user(email="unenrolled@test.com", password="Pass123!")
         api_client.force_authenticate(user=unenrolled)
         course = course_setup["course"]
         url = reverse("content:review-list", kwargs={"slug": course.slug})
-        response = api_client.post(
-            url, {"rating": 5, "comment": "Can't review"}, format="json"
-        )
+        response = api_client.post(url, {"rating": 5, "comment": "Can't review"}, format="json")
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_reviews_are_public(self, api_client, student, course_setup):
@@ -111,6 +97,7 @@ class TestReviews:
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data["results"]) == 1
+
 
 @pytest.mark.django_db
 class TestCertificates:

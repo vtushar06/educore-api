@@ -4,6 +4,7 @@ Course signals — enrollment status change notifications.
 When an enrollment status changes to 'approved', this triggers
 an async notification (via Celery if available, otherwise logs).
 """
+
 import logging
 
 from django.db.models.signals import post_save
@@ -12,6 +13,7 @@ from django.dispatch import receiver
 from .models import Enrollment
 
 logger = logging.getLogger(__name__)
+
 
 @receiver(post_save, sender=Enrollment)
 def enrollment_status_changed(sender, instance, created, **kwargs):

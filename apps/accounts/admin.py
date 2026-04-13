@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 User = get_user_model()
 
+
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     """Custom admin for the email-based User model."""
@@ -17,15 +18,21 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         ("Personal info", {"fields": ("first_name", "last_name", "bio", "avatar")}),
-        ("Role & Permissions", {
-            "fields": ("role", "is_active", "is_staff", "is_superuser", "groups", "user_permissions"),
-        }),
+        (
+            "Role & Permissions",
+            {
+                "fields": ("role", "is_active", "is_staff", "is_superuser", "groups", "user_permissions"),
+            },
+        ),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
 
     add_fieldsets = (
-        (None, {
-            "classes": ("wide",),
-            "fields": ("email", "first_name", "last_name", "role", "password1", "password2"),
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("email", "first_name", "last_name", "role", "password1", "password2"),
+            },
+        ),
     )

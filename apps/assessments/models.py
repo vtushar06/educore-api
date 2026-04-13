@@ -2,15 +2,14 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 
+
 class Quiz(models.Model):
     """
     Assessment attached to a specific lesson.
     Each lesson can have at most one quiz.
     """
 
-    lesson = models.OneToOneField(
-        "courses.Lesson", on_delete=models.CASCADE, related_name="quiz"
-    )
+    lesson = models.OneToOneField("courses.Lesson", on_delete=models.CASCADE, related_name="quiz")
     title = models.CharField(max_length=200)
     passing_score = models.PositiveIntegerField(
         default=60,
@@ -33,6 +32,7 @@ class Quiz(models.Model):
 
     def __str__(self):
         return f"Quiz: {self.title}"
+
 
 class Question(models.Model):
     """
@@ -73,6 +73,7 @@ class Question(models.Model):
 
     def __str__(self):
         return f"Q{self.order}: {self.text[:60]}"
+
 
 class Attempt(models.Model):
     """

@@ -4,6 +4,7 @@ EduCore API — Root URL configuration.
 All API endpoints are versioned under /api/v1/.
 Admin interface available at /admin/.
 """
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin

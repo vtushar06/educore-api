@@ -11,6 +11,7 @@ from .serializers import (
     ReviewSerializer,
 )
 
+
 class NoteListCreateView(generics.ListCreateAPIView):
     """
     GET  /api/v1/lessons/{lesson_id}/notes/  — list own notes for a lesson
@@ -30,6 +31,7 @@ class NoteListCreateView(generics.ListCreateAPIView):
             lesson_id=self.kwargs["lesson_id"],
         )
 
+
 class NoteDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     GET/PUT/DELETE /api/v1/notes/{id}/  — manage own note
@@ -40,6 +42,7 @@ class NoteDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Note.objects.filter(author=self.request.user)
+
 
 class ReviewListCreateView(generics.ListCreateAPIView):
     """
@@ -58,9 +61,8 @@ class ReviewListCreateView(generics.ListCreateAPIView):
         return ReviewSerializer
 
     def get_queryset(self):
-        return Review.objects.filter(
-            course__slug=self.kwargs["slug"]
-        ).select_related("student")
+        return Review.objects.filter(course__slug=self.kwargs["slug"]).select_related("student")
+
 
 class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -70,6 +72,7 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
     queryset = Review.objects.all()
+
 
 class MyCertificatesView(generics.ListAPIView):
     """
@@ -82,9 +85,8 @@ class MyCertificatesView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        return Certificate.objects.filter(
-            student=self.request.user
-        ).select_related("course")
+        return Certificate.objects.filter(student=self.request.user).select_related("course")
+
 
 class CertificateVerifyView(generics.RetrieveAPIView):
     """

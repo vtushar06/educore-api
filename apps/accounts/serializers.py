@@ -4,15 +4,14 @@ from rest_framework import serializers
 
 User = get_user_model()
 
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
         validators=[validate_password],
         style={"input_type": "password"},
     )
-    password_confirm = serializers.CharField(
-        write_only=True, style={"input_type": "password"}
-    )
+    password_confirm = serializers.CharField(write_only=True, style={"input_type": "password"})
 
     class Meta:
         model = User
@@ -32,20 +31,17 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate_role(self, value):
         # Prevent self-registration as admin
         if value == User.Role.ADMIN:
-            raise serializers.ValidationError(
-                "Admin accounts can only be created by existing admins."
-            )
+            raise serializers.ValidationError("Admin accounts can only be created by existing admins.")
         return value
 
     def validate(self, attrs):
         if attrs["password"] != attrs.pop("password_confirm"):
-            raise serializers.ValidationError(
-                {"password_confirm": "Passwords do not match."}
-            )
+            raise serializers.ValidationError({"password_confirm": "Passwords do not match."})
         return attrs
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -61,6 +57,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "date_joined",
         )
         read_only_fields = ("id", "email", "role", "date_joined")
+
 
 class UserListSerializer(serializers.ModelSerializer):
     """Lightweight serializer used in nested representations."""

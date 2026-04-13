@@ -1,34 +1,26 @@
 from rest_framework import permissions
 
+
 class IsAdmin(permissions.BasePermission):
     """Allow access only to users with the admin role."""
 
     def has_permission(self, request, view):
-        return (
-            request.user
-            and request.user.is_authenticated
-            and request.user.role == "admin"
-        )
+        return request.user and request.user.is_authenticated and request.user.role == "admin"
+
 
 class IsInstructor(permissions.BasePermission):
     """Allow access only to users with the instructor role."""
 
     def has_permission(self, request, view):
-        return (
-            request.user
-            and request.user.is_authenticated
-            and request.user.role == "instructor"
-        )
+        return request.user and request.user.is_authenticated and request.user.role == "instructor"
+
 
 class IsInstructorOrAdmin(permissions.BasePermission):
     """Allow access to instructors and admins."""
 
     def has_permission(self, request, view):
-        return (
-            request.user
-            and request.user.is_authenticated
-            and request.user.role in ("instructor", "admin")
-        )
+        return request.user and request.user.is_authenticated and request.user.role in ("instructor", "admin")
+
 
 class IsEnrolled(permissions.BasePermission):
     """
@@ -72,6 +64,7 @@ class IsEnrolled(permissions.BasePermission):
             course=course,
             status=Enrollment.Status.APPROVED,
         ).exists()
+
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """

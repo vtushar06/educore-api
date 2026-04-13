@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 from .models import Attempt, Question, Quiz
 
+
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
@@ -18,11 +19,10 @@ class QuestionSerializer(serializers.ModelSerializer):
         # Only hide answers for non-instructor users
         if request and request.user.role not in ("instructor", "admin"):
             if instance.question_type == "mcq" and data.get("choices"):
-                data["choices"] = [
-                    {"text": c["text"]} for c in data["choices"]
-                ]
+                data["choices"] = [{"text": c["text"]} for c in data["choices"]]
             data.pop("correct_answer", None)
         return data
+
 
 class QuestionCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,20 +35,17 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
         if qtype == "mcq":
             choices = attrs.get("choices")
             if not choices or not isinstance(choices, list):
-                raise serializers.ValidationError(
-                    {"choices": "MCQ questions require a list of choices."}
-                )
+                raise serializers.ValidationError({"choices": "MCQ questions require a list of choices."})
             correct_count = sum(1 for c in choices if c.get("is_correct"))
             if correct_count < 1:
-                raise serializers.ValidationError(
-                    {"choices": "At least one choice must be marked correct."}
-                )
+                raise serializers.ValidationError({"choices": "At least one choice must be marked correct."})
         elif qtype == "short_answer":
             if not attrs.get("correct_answer", "").strip():
                 raise serializers.ValidationError(
                     {"correct_answer": "Short-answer questions require a correct answer."}
                 )
         return attrs
+
 
 class QuizSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
@@ -65,6 +62,7 @@ class QuizSerializer(serializers.ModelSerializer):
             "questions",
         )
         read_only_fields = ("id",)
+
 
 class QuizCreateSerializer(serializers.ModelSerializer):
     questions = QuestionCreateSerializer(many=True, required=False)
@@ -88,6 +86,7 @@ class QuizCreateSerializer(serializers.ModelSerializer):
             Question.objects.create(quiz=quiz, **q_data)
         return quiz
 
+
 class AttemptSubmitSerializer(serializers.Serializer):
     """
     Accepts a list of answers and grades the attempt.
@@ -103,9 +102,7 @@ class AttemptSubmitSerializer(serializers.Serializer):
             raise serializers.ValidationError("At least one answer is required.")
         for entry in value:
             if "question_id" not in entry or "answer" not in entry:
-                raise serializers.ValidationError(
-                    "Each answer must have 'question_id' and 'answer' fields."
-                )
+                raise serializers.ValidationError("Each answer must have 'question_id' and 'answer' fields.")
         return value
 
     def grade(self, quiz, student):
@@ -123,9 +120,7 @@ class AttemptSubmitSerializer(serializers.Serializer):
 
             if question.question_type == "mcq":
                 # Check if the submitted answer matches any correct choice
-                correct_texts = [
-                    c["text"] for c in (question.choices or []) if c.get("is_correct")
-                ]
+                correct_texts = [c["text"] for c in (question.choices or []) if c.get("is_correct")]
                 if entry["answer"] in correct_texts:
                     earned_points += question.points
             elif question.question_type == "short_answer":
@@ -155,6 +150,7 @@ class AttemptSubmitSerializer(serializers.Serializer):
             attempt.save(update_fields=["time_taken_seconds"])
 
         return attempt
+
 
 class AttemptSerializer(serializers.ModelSerializer):
     class Meta:

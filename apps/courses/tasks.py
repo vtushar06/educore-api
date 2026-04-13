@@ -1,6 +1,7 @@
 """
 Celery tasks for the courses app.
 """
+
 import logging
 
 from celery import shared_task
@@ -8,15 +9,14 @@ from django.core.mail import send_mail
 
 logger = logging.getLogger(__name__)
 
+
 @shared_task(bind=True, max_retries=3)
 def send_enrollment_notification(self, enrollment_id):
     """Send an email notification when enrollment is approved."""
     from .models import Enrollment
 
     try:
-        enrollment = Enrollment.objects.select_related("student", "course").get(
-            pk=enrollment_id
-        )
+        enrollment = Enrollment.objects.select_related("student", "course").get(pk=enrollment_id)
     except Enrollment.DoesNotExist:
         logger.warning("Enrollment %s not found, skipping notification.", enrollment_id)
         return

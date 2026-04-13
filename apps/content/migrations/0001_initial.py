@@ -6,6 +6,7 @@ from django.db import migrations, models
 import django.db.models.deletion
 import uuid
 
+
 class Migration(migrations.Migration):
 
     initial = True

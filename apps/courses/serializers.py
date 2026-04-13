@@ -7,11 +7,13 @@ from .models import Course, Enrollment, Lesson, LessonProgress, Module
 
 User = get_user_model()
 
+
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = ("id", "title", "content", "video_url", "duration_minutes", "order")
         read_only_fields = ("id",)
+
 
 class LessonBriefSerializer(serializers.ModelSerializer):
     """Lightweight lesson representation for module listings."""
@@ -19,6 +21,7 @@ class LessonBriefSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = ("id", "title", "duration_minutes", "order")
+
 
 class ModuleSerializer(serializers.ModelSerializer):
     lessons = LessonBriefSerializer(many=True, read_only=True)
@@ -28,11 +31,13 @@ class ModuleSerializer(serializers.ModelSerializer):
         fields = ("id", "title", "order", "lessons")
         read_only_fields = ("id",)
 
+
 class ModuleCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
         fields = ("id", "title", "order")
         read_only_fields = ("id",)
+
 
 class CourseListSerializer(serializers.ModelSerializer):
     instructor = UserListSerializer(read_only=True)
@@ -56,6 +61,7 @@ class CourseListSerializer(serializers.ModelSerializer):
             "created_at",
         )
         read_only_fields = ("id", "slug", "created_at")
+
 
 class CourseDetailSerializer(serializers.ModelSerializer):
     instructor = UserListSerializer(read_only=True)
@@ -83,6 +89,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("id", "slug", "created_at", "updated_at")
 
+
 class CourseCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
@@ -102,6 +109,7 @@ class CourseCreateSerializer(serializers.ModelSerializer):
         validated_data["instructor"] = self.context["request"].user
         return super().create(validated_data)
 
+
 class EnrollmentSerializer(serializers.ModelSerializer):
     student = UserListSerializer(read_only=True)
     course_title = serializers.CharField(source="course.title", read_only=True)
@@ -120,11 +128,13 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("id", "student", "course", "enrolled_at")
 
+
 class EnrollmentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
         fields = ("id", "course", "status", "enrolled_at")
         read_only_fields = ("id", "course", "status", "enrolled_at")
+
 
 class LessonProgressSerializer(serializers.ModelSerializer):
     class Meta:

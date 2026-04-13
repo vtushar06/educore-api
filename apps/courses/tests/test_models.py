@@ -5,6 +5,7 @@ from apps.courses.models import Course, Enrollment, Lesson, LessonProgress, Modu
 
 User = get_user_model()
 
+
 @pytest.fixture
 def instructor():
     return User.objects.create_user(
@@ -15,6 +16,7 @@ def instructor():
         role="instructor",
     )
 
+
 @pytest.fixture
 def student():
     return User.objects.create_user(
@@ -23,6 +25,7 @@ def student():
         first_name="Test",
         last_name="Student",
     )
+
 
 @pytest.fixture
 def course(instructor):
@@ -35,9 +38,11 @@ def course(instructor):
         is_published=True,
     )
 
+
 @pytest.fixture
 def module(course):
     return Module.objects.create(course=course, title="Getting Started", order=1)
+
 
 @pytest.fixture
 def lesson(module):
@@ -47,6 +52,7 @@ def lesson(module):
         content="Welcome to the course.",
         order=1,
     )
+
 
 @pytest.mark.django_db
 class TestCourseModel:
@@ -74,6 +80,7 @@ class TestCourseModel:
     def test_course_str(self, course):
         assert str(course) == "Python Fundamentals"
 
+
 @pytest.mark.django_db
 class TestEnrollmentModel:
     def test_default_status_is_pending(self, student, course):
@@ -81,9 +88,7 @@ class TestEnrollmentModel:
         assert enrollment.status == "pending"
 
     def test_completion_percentage(self, student, course, module, lesson):
-        enrollment = Enrollment.objects.create(
-            student=student, course=course, status="approved"
-        )
+        enrollment = Enrollment.objects.create(student=student, course=course, status="approved")
         assert enrollment.completion_percentage == 0
 
         LessonProgress.objects.create(enrollment=enrollment, lesson=lesson)

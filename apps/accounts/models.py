@@ -3,6 +3,7 @@ from django.db import models
 
 from .managers import UserManager
 
+
 class User(AbstractUser):
     """
     Custom user model with email-based authentication and role support.

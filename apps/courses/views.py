@@ -3,20 +3,20 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.accounts.permissions import IsEnrolled, IsInstructorOrAdmin, IsOwnerOrReadOnly
+from apps.accounts.permissions import IsInstructorOrAdmin, IsOwnerOrReadOnly
 
 from .models import Course, Enrollment, Lesson, LessonProgress, Module
 from .serializers import (
     CourseCreateSerializer,
     CourseDetailSerializer,
     CourseListSerializer,
-    EnrollmentCreateSerializer,
     EnrollmentSerializer,
     LessonProgressSerializer,
     LessonSerializer,
     ModuleCreateSerializer,
     ModuleSerializer,
 )
+
 
 class CourseListCreateView(generics.ListCreateAPIView):
     """
@@ -49,6 +49,7 @@ class CourseListCreateView(generics.ListCreateAPIView):
             return qs
         return qs.filter(is_published=True)
 
+
 class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     GET    /api/v1/courses/{slug}/   — course detail (public for published)
@@ -72,6 +73,7 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ("PUT", "PATCH"):
             return CourseCreateSerializer
         return CourseDetailSerializer
+
 
 class ModuleListCreateView(generics.ListCreateAPIView):
     """
@@ -98,6 +100,7 @@ class ModuleListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         course = self.get_course()
         serializer.save(course=course)
+
 
 class LessonListCreateView(generics.ListCreateAPIView):
     """
@@ -162,9 +165,7 @@ class LessonCompleteView(APIView):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        progress, created = LessonProgress.objects.get_or_create(
-            enrollment=enrollment, lesson=lesson
-        )
+        progress, created = LessonProgress.objects.get_or_create(enrollment=enrollment, lesson=lesson)
 
         if not created:
             return Response(
@@ -259,6 +260,4 @@ class MyEnrollmentsView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        return Enrollment.objects.filter(
-            student=self.request.user
-        ).select_related("course")
+        return Enrollment.objects.filter(student=self.request.user).select_related("course")

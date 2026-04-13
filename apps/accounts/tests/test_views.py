@@ -6,9 +6,11 @@ from rest_framework.test import APIClient
 
 User = get_user_model()
 
+
 @pytest.fixture
 def api_client():
     return APIClient()
+
 
 @pytest.fixture
 def student_user():
@@ -18,6 +20,7 @@ def student_user():
         first_name="Test",
         last_name="Student",
     )
+
 
 @pytest.mark.django_db
 class TestRegistration:
@@ -58,6 +61,7 @@ class TestRegistration:
         }
         response = api_client.post(url, data, format="json")
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+
 
 @pytest.mark.django_db
 class TestAuthentication:

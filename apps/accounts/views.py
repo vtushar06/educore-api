@@ -6,6 +6,7 @@ from .serializers import RegisterSerializer, UserProfileSerializer
 
 User = get_user_model()
 
+
 class RegisterView(generics.CreateAPIView):
     """
     POST /api/v1/auth/register/
@@ -29,6 +30,7 @@ class RegisterView(generics.CreateAPIView):
             },
             status=status.HTTP_201_CREATED,
         )
+
 
 class ProfileView(generics.RetrieveUpdateAPIView):
     """

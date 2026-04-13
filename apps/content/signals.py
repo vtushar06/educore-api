@@ -5,12 +5,14 @@ Listens to LessonProgress creation and checks whether the student
 has now completed all lessons in the course. If so, a Certificate
 is issued automatically.
 """
+
 import logging
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 logger = logging.getLogger(__name__)
+
 
 @receiver(post_save, sender="courses.LessonProgress")
 def check_course_completion(sender, instance, created, **kwargs):

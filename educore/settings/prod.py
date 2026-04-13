@@ -1,6 +1,7 @@
 """
 Production settings — Postgres, strict security, no debug.
 """
+
 import os
 
 from .base import *  # noqa: F401,F403

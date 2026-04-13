@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import Certificate, Note, Review
 
+
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
     list_display = ("author", "lesson", "body_preview", "updated_at")
@@ -13,12 +14,14 @@ class NoteAdmin(admin.ModelAdmin):
     def body_preview(self, obj):
         return obj.body[:100] + "..." if len(obj.body) > 100 else obj.body
 
+
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ("student", "course", "rating", "created_at")
     list_filter = ("rating", "created_at", "course")
     search_fields = ("student__email", "course__title", "comment")
     readonly_fields = ("student", "course", "created_at")
+
 
 @admin.register(Certificate)
 class CertificateAdmin(admin.ModelAdmin):

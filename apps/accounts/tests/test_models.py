@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 @pytest.mark.django_db
 class TestUserModel:
     def test_create_user(self):
@@ -43,15 +44,9 @@ class TestUserModel:
         assert "John Doe" in str(user)
 
     def test_role_properties(self):
-        student = User.objects.create_user(
-            email="s@example.com", password="Pass123!", role="student"
-        )
-        instructor = User.objects.create_user(
-            email="i@example.com", password="Pass123!", role="instructor"
-        )
-        admin = User.objects.create_user(
-            email="a@example.com", password="Pass123!", role="admin"
-        )
+        student = User.objects.create_user(email="s@example.com", password="Pass123!", role="student")
+        instructor = User.objects.create_user(email="i@example.com", password="Pass123!", role="instructor")
+        admin = User.objects.create_user(email="a@example.com", password="Pass123!", role="admin")
         assert student.is_student
         assert instructor.is_instructor
         assert admin.is_admin_user
