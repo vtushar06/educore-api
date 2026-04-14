@@ -29,7 +29,7 @@ import dj_database_url
 db_from_env = dj_database_url.config(
     default=os.environ.get("DATABASE_URL"),
     conn_max_age=500,
-    ssl_require=False  # Render manages SSL internally via their VPC network
+    ssl_require=False,  # Render manages SSL internally via their VPC network
 )
 
 if db_from_env:
